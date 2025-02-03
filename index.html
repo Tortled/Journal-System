@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <title>Verification Required</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+        .desktop {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #343541;
+        }
+        .journalLabel {
+            width: 100%;
+            height: auto;
+            position: absolute;
+            top: 27px;
+            font-size: 120px;
+            font-weight: 800;
+            text-align: center;
+            color: #000000;
+        }
+        .passwordLabel, .button {
+            font-size: 25px;
+            line-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #000000;
+            background: #78787F;
+            color: #000000;
+            font-weight: bold;
+            position: fixed;
+            bottom: 13%;
+            height: 54px;
+        }
+        .passwordLabel {
+            width: 191px;
+            left: calc(50% - 595px / 2 - 95.5px);
+            border-radius: 20px 0 0 20px;
+            z-index: 75;
+        }
+        .button {
+            width: 191px;
+            right: calc(50% - 595px / 2 - 95.5px);
+            background: #58AD5A;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            z-index: 75;
+        }
+        .passwordTextbox {
+            position: fixed;
+            bottom: 13%;
+            z-index: 100;
+            left: calc(50% - 595px / 2 + 95.5px);
+            right: calc(50% - 595px / 2 + 95.5px);
+            height: 52px;
+            background: #5A5A69;
+            color: #000000;
+            font-family: 'Consolata', monospace;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: left;
+            padding-left: 10px;
+            border: 4px solid #000000;
+            width: auto;
+        }
+        .passwordTextbox::placeholder {
+            color: #909099;
+            opacity: 1;
+        }
+        .notice {
+            position: absolute;
+            width: 850px;
+            left: 50%;
+            z-index: 50;
+            transform: translateX(-50%);
+            top: calc(50vh - 200px);
+            background: #78787F;
+            border: 4px solid #000000;
+            border-radius: 20px;
+            font-family: 'Consolata', monospace;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .versionLabel {
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 7px;
+            font-size: 17px;
+            border: 3px solid #000000;
+            background: #78787F;
+            border-radius: 0 0 20px 0;
+            font-weight: bold;
+        }
+        .live {
+            color: #d42a2a;
+            padding: 9px;
+        }
+        .imageBox {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 185px;
+            height: 162px;
+            background: #78787F;
+            border: 4px solid #000000;
+            border-radius: 0 0 0 20px;
+        }
+        .image {
+            position: absolute;
+            right: 16px;
+            top: 5px;
+            width: 160px;
+            height: 160px;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop">
+        <div class="passwordLabel">Password:</div>
+        <input type="text" class="passwordTextbox" id="passwordTextBox" placeholder="Enter Password..." onkeydown="validatePassword(event)">
+        <div class="button" onclick="validatePassword(null)">Validate</div>
+        <div class="notice">
+            <p>The “Journal System” is solely maintained by and for Patrick Murray.</p>
+            <p>All content is confidential and unauthorized access is strictly prohibited.</p>
+            <p>Sharing, using, deleting, or distributing data is per my sole discretion only.</p>
+            <p>The integrity of the Journal System is protected under Federal Law 8 USC §1030.</p>
+            <p>Violators of these terms will be prosecuted to the fullest extent of the law.</p>
+            <p>Both criminal and civil charges may be pressed in accordance with violations.</p>
+            <p>By refusing to close this page, you acknowledge acceptance of these terms.</p>
+            <p>Your activity here may be automatically monitored by the Journal System.</p>
+            <p>The right is reserved to amend or modify this statement at any time.</p>
+        </div>
+        <div class="journalLabel">Journal System</div>
+        <div class="imageBox"></div>
+        <div class="image"></div>
+        <div class="versionLabel">Version: 17.03 |  <span class="live">LIVE</span></div>
+    </div>
+    <script>
+        var base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAABHNCSVQICAgIfAhkiAAAAzFJREFUeJzt3bGKHWUYgOHZsDZpNrAihMAuxkIIaYIgNoKFl2AjeAVp0u8FBFKmzAUcbOxtBUmj2IUUSpDdEAIhAbdJk0JvYIsPHPMezz5P/TFzlvPyF/MxZ5cFAAAAAABgV+3VH+D/7ta3t/4u7vv0+6c78d1dqT8Al5sASQmQlABJCZCUAEkJkJQASQmQ1H79Ad63tTcXhx8fjuaufnh1NHdwfDCaO392Pvo7XvzyYqs3Jk5AUgIkJUBSAiQlQFICJCVAUgIkJUBSW/2UfFl2Z3MxdX56vup9Hz94PJqrNiZOQFICJCVAUgIkJUBSAiQlQFICJCVAUqs//a42F9c/u77mbcee/PBk1evd/ub2aG5XNiZOQFICJCVAUgIkJUBSAiQlQFICJCVAUnu7srmYbiSmm4a12ZhczAlISoCkBEhKgKQESEqApARISoCkBEhq78bnN0abkJtf3xxdcLrhWPsJ/ZSNycWm38fzX5/Prvdsdj0nICkBkhIgKQGSEiApAZISICkBkhIgqfEm5OCT2UZi7XdCbEwutvbmYurOlTujuc1m450Qtp8ASQmQlABJCZCUAEkJkJQASQmQ1P7aFzz58mQ0d//n+6O5amOy9obj5W8vR3Nv/nyz6n3vfXVvNHd0dDSaOzs7G81tNpvRnBOQlABJCZCUAEkJkJQASQmQlABJCZDU/rvfX40GD4e/jnV8fDyaO1m2e2Py9vXb0dy2by6mphuOhz89HM1N3zVyApISICkBkhIgKQGSEiApAZISICkBkhr9gtGyLMtH1z4YPdn+9O4Xo+s9+u7RaO709HQ0N92Y2Fz8O69//GPV6zkBSQmQlABJCZCUAEkJkJQASQmQlABJjTchU9u+MZluELZ9czH9j+TTd36mXv31btVmnICkBEhKgKQESEqApARISoCkBEhKgKRW34RM7crG5LJtLtbmBCQlQFICJCVAUgIkJUBSAiQlQFICJLXVT8mXZf2NyfTXsWwu3g8nICkBkhIgKQGSEiApAZISICkBkhIgqZ156j7dmKztsm0u1uYEJCVAUgIkJUBSAiQlQFICJCVAUgIEAAAAAACA/8Q/SqTOQqrzkRoAAAAASUVORK5CYII=";
+        var link = document.createElement('link');
+        link.rel = 'icon';
+        link.href = base64Image;
+        document.getElementsByTagName('head')[0].appendChild(link);
+        document.addEventListener('DOMContentLoaded', function() {
+            var imgStyle = '.image {background-image: url("' + base64Image + '"); background-size: cover;}';
+            var styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = imgStyle;
+            document.head.appendChild(styleSheet);
+        });
+        var timeoutReference;
+        function validatePassword(event) {
+            if (!event || (event && event.key === "Enter")) {
+                var box = document.getElementById('passwordTextBox');
+                box.value = "";
+                box.style.border = "4px solid #bf2828";
+                clearTimeout(timeoutReference);
+                timeoutReference = setTimeout(function() {
+                    box.style.border = "4px solid #000000";
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html>
