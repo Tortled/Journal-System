@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function () {
+      if (new URLSearchParams(location.search).has('desktop')) return;
+      const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const smallScreen = window.matchMedia("(max-width: 640px)").matches;
+      if (isiOS || smallScreen) location.replace("index.mobile.html");
+    })();
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verification Required</title>
+  <title>Journal System - Login</title>
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
     html, body {
@@ -231,3 +241,4 @@
   </script>
 </body>
 </html>
+
