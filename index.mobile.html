@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Journal • Mobile</title>
+  <style>
+    /* Type */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Consolata:wght@700&display=swap');
+
+    :root{
+      /* Patrick's palette (same as desktop) */
+      --bg:#343541;
+      --panel:#78787F;
+      --input:#5A5A69;
+      --border:#000000;
+      --green:#58AD5A;
+      --error:#bf2828;
+      --text:#000000;
+
+      /* Title sizing */
+      --h1-max:64px;      /* mobile friendly max */
+      --h1-min:28px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden; /* keeps the bottom bar pinned cleanly */
+    }
+
+    /* Top status bar (kept) */
+    .versionBar{
+      position:fixed; top:0; left:0; margin:0;
+      display:flex; align-items:center; gap:0.5rem;
+      padding:0.45rem 0.6rem;
+      font-weight:800; font-size:clamp(.75rem,1.2vw,1.0625rem);
+      background:var(--panel);
+      border:3px solid var(--border);
+      border-radius:0 0 20px 0;
+      z-index:100;
+    }
+    .versionBar .sep{margin:0 0.5rem}
+    .connected{color:green}
+    .pulse{width:15px;height:15px;border-radius:50%;background:green;animation:pulseGreen 1.5s infinite}
+    @keyframes pulseGreen{0%{box-shadow:0 0 0 0 rgba(0,128,0,.7)}70%{box-shadow:0 0 0 10px rgba(0,128,0,0)}100%{box-shadow:0 0 0 0 rgba(0,128,0,0)}}
+
+    /* Main vertical layout between top bar and auth bar */
+    .stack{
+      position:absolute; left:50%; transform:translateX(-50%);
+      top:clamp(56px, 8vh, 96px);
+      width:min(560px, 92vw);
+      bottom:calc(14vh + max(52px, 5.6vh) + 22px); /* room for password bar + breathing space */
+      display:flex; flex-direction:column; align-items:center;
+      gap:clamp(10px, 2.8vh, 18px);
+      padding:0 6px;
+    }
+
+    .titles{
+      display:flex; flex-direction:column; align-items:center;
+      gap:6px; text-align:center;
+    }
+    .titles h1{
+      margin:0;
+      font-weight:800;
+      font-size:clamp(var(--h1-min), 9vw, var(--h1-max));
+      line-height:1;
+      letter-spacing:0.5px;
+      white-space:nowrap;
+      color:#000;
+    }
+    .byline{
+      font-family:'Consolata',ui-monospace,Menlo,Consolas,monospace;
+      font-weight:700;
+      font-size:clamp(.85rem, 3.5vw, 1rem);
+      opacity:.95;
+    }
+
+    /* SVG panel that adopts the notice’s visual chrome (just smaller) */
+    .logoPanel{
+      width:min(420px, 85vw);
+      background:var(--panel);
+      border:4px solid var(--border);
+      border-radius:20px;
+      padding:clamp(10px, 2.8vw, 16px);
+    }
+    .logoPanel img{
+      display:block;
+      width:100%;
+      height:auto;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* Password bar, fixed above the bottom */
+    .auth{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:14vh;
+      width:min(595px, 92vw);
+      height:clamp(46px,5.6vh,54px);
+      display:flex; align-items:center; overflow:hidden;
+      border:4px solid var(--border); border-radius:20px;
+      background:transparent;
+    }
+    .auth .label{
+      flex:0 0 clamp(132px, 30%, 191px); height:100%;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--panel); color:var(--text);
+      font-weight:800; font-size:clamp(.9rem,1.8vw,1.25rem);
+      border-right:4px solid var(--border)
+    }
+    .auth input{
+      flex:1 1 auto; height:100%;
+      background:var(--input); color:var(--text);
+      border:0; outline:none;
+      font-family:'Consolata',ui-monospace,monospace;
+      font-weight:700; font-size:clamp(.95rem,1.4vw,1.1rem);
+      padding:0 12px
+    }
+    .auth input::placeholder{color:#909099}
+    .auth button{
+      flex:0 0 clamp(128px, 28%, 191px); height:100%;
+      display:flex; align-items:center; justify-content:center;
+      background:var(--green); color:var(--text);
+      font-weight:800; font-size:clamp(.9rem,1.8vw,1.15rem);
+      border:0; border-left:4px solid var(--border); cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    /* Scroll fallback for very short screens / landscape */
+    @media (max-height:640px){
+      body{overflow:auto}
+      .stack{bottom:calc(14vh + max(52px,5.6vh) + 12px)}
+    }
+  </style>
+</head>
+<body>
+  <!-- Top status (unchanged behavior) -->
+  <div class="versionBar">
+    <span>Version:&nbsp;<span id="versionText"></span></span>
+    <span class="sep">|</span>
+    <span class="connected">CONNECTED</span>
+    <span class="pulse" aria-hidden="true"></span>
+  </div>
+
+  <!-- Central content -->
+  <main class="stack" id="stack">
+    <div class="titles">
+      <h1>Journal</h1>
+      <h1>System</h1>
+      <div class="byline">By Patrick Murray</div>
+    </div>
+
+    <!-- slight space is provided by .stack gap -->
+
+    <!-- SVG panel styled like the old notice, just smaller -->
+    <div class="logoPanel" aria-label="Journal Logo">
+      <img src="JournalLogo.svg" alt="Journal Logo" />
+    </div>
+  </main>
+
+  <!-- Password control -->
+  <form class="auth" onsubmit="event.preventDefault(); validatePassword();">
+    <div class="label">Password:</div>
+    <input
+      id="passwordTextBox"
+      type="password"
+      inputmode="text"
+      autocomplete="current-password"
+      placeholder="Password..."
+    />
+    <button type="submit">Validate</button>
+  </form>
+
+  <script>
+    // Favicon from logo (kept)
+    (function(){
+      var l=document.createElement('link');
+      l.rel='icon';
+      l.href='JournalLogo.svg';
+      document.head.appendChild(l);
+    })();
+
+    // Dynamic version (kept logic)
+    (function(){
+      var d=new Date(),y=d.getFullYear(),m=d.getMonth()+1,day=d.getDate();
+      var v=(m===1&&day<20)?(y-2007-1)+'.13':(y-2007)+'.'+String(m).padStart(2,'0');
+      document.getElementById('versionText').textContent=v;
+    })();
+
+    // Password "validation" UX (kept)
+    function validatePassword(){
+      var box=document.getElementById('passwordTextBox');
+      box.value='';
+      box.style.outline='4px solid var(--error)';
+      setTimeout(function(){box.style.outline='none'},900);
+    }
+
+    // Allow Enter to trigger validation (kept)
+    document.getElementById('passwordTextBox').addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); validatePassword(); }
+    });
+  </script>
+</body>
+</html>
